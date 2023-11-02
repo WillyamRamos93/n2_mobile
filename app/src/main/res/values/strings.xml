@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">Curso Extensao</string>
+    <string name="courseName" translatable="false">Nome do curso</string>
+    <string name="descr" translatable="false">Descrição</string>
+    <string name="save" translatable="false">Salvar</string>
+
+    <string-array name="weekDay">
+        <item>Segunda</item>
+        <item>Terça</item>
+        <item>Quarta</item>
+        <item>Quinta</item>
+        <item>Sexta</item>
+
+    </string-array>
+    <string-array name="classSession">
+        <item>Manhã</item>
+        <item>Tarde</item>
+        <item>Noite</item>
+    </string-array>
+
 </resources>
