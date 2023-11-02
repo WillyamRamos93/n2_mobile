@@ -60,19 +60,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:layout_marginEnd="56dp"
+        android:layout_marginEnd="36dp"
         android:text="Salvar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descClass" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/testView"
-        android:layout_width="343dp"
-        android:layout_height="161dp"
-        android:layout_marginBottom="40dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.441"
+    <Button
+        android:id="@+id/btn_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="40dp"
+        android:text="Listar"
+        app:layout_constraintEnd_toStartOf="@+id/saveCourse"
+        app:layout_constraintHorizontal_bias="0.151"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/saveCourse" />
+        app:layout_constraintTop_toBottomOf="@+id/descClass" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,6 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String COURSE_TABLE = "COURSE_TABLE";
     public static final String COLUMN_NM_COURSE = "nm_course";
@@ -88,5 +91,36 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             db.endTransaction();
         }
 
+    }
+
+    public List<CourseModel> getAllCourses(){
+        List<CourseModel> returnList = new ArrayList<>();
+        String queryCourse = "SELECT "  + COLUMN_COURSE_ID + ", " + COLUMN_NM_COURSE + ", " + COLUMN_SESSION + ", " + COLUMN_WEEK_DAY + ", " + COLUMN_DESCRIPTION +
+                             " FROM "   + COURSE_TABLE + " C " +
+                             " JOIN "   + SCHEDULES_TABLE + " S " +
+                             " ON C."   + COLUMN_COURSE_ID + " = " + " S." + COLUMN_ID_COURSE;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(queryCourse, null);
+
+        if(cursor.moveToFirst()){
+            //loop pela query e cria um objeto do curso
+            do{
+                int courseId = cursor.getInt(0);
+                String courseName = cursor.getString(1);
+                String courseSession = cursor.getString(2);
+                String courseDay = cursor.getString(3);
+                String courseDesc = cursor.getString(4);
+
+                CourseModel newCourse = new CourseModel(courseId, courseName, courseSession, courseDay, courseDesc);
+                returnList.add(newCourse);
+            }while(cursor.moveToNext());
+        }else{
+
+        }
+
+        cursor.close();
+        db.close();
+        return returnList;
     }
 }

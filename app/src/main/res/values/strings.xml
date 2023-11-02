@@ -3,6 +3,7 @@
     <string name="courseName" translatable="false">Nome do curso</string>
     <string name="descr" translatable="false">Descrição</string>
     <string name="save" translatable="false">Salvar</string>
+    <string name="delete" translatable="false">Deletar</string>
 
     <string-array name="weekDay">
         <item>Segunda</item>

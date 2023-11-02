@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- item_course.xml -->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+
+
+    <TextView
+        android:id="@+id/textViewCourseName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Course Name"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/textViewCourseSession"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewCourseName"
+        android:layout_marginTop="8dp"
+        android:text="Course Session" />
+
+    <TextView
+        android:id="@+id/textViewCourseDay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewCourseName"
+        android:layout_toEndOf="@id/textViewCourseSession"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:text="Course Day"/>
+
+    <TextView
+        android:id="@+id/textViewCourseDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewCourseSession"
+        android:layout_marginTop="16dp"
+        android:text="Course Description" />
+
+    <Button
+        android:id="@+id/btn_delete"
+        android:layout_width="97dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="163dp"
+        android:layout_marginTop="16dp"
+        android:layout_toEndOf="@id/textViewCourseDesc"
+        android:text="@string/delete" />
+
+</RelativeLayout>
