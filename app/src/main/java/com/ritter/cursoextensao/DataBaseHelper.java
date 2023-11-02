@@ -2,6 +2,7 @@ package com.ritter.cursoextensao;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -39,19 +40,52 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public boolean addCourse (CourseModel courseModel) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
+        ContentValues cv_course = new ContentValues();
+        ContentValues cv_schedule = new ContentValues();
+        db.beginTransaction();
 
+        try{
+            //Inserir na tabela COURSE_TABLE
+            cv_course.put(COLUMN_NM_COURSE, courseModel.getName());
+            cv_course.put(COLUMN_DESCRIPTION, courseModel.getDescription());
+            long courseInsert = db.insert(COURSE_TABLE, null, cv_course);
 
-        cv.put(COLUMN_NM_COURSE, courseModel.getName());
-        cv.put(COLUMN_DESCRIPTION, courseModel.getDescription());
-        cv.put(COLUMN_SESSION, courseModel.getSession());
-        cv.put(COLUMN_WEEK_DAY, courseModel.getWeekDay());
+            // Recuperar o ID recém-inserido na tabela COURSE_TABLE
+            long courseId = -1;
+            if (courseInsert != -1) {
+                String query = "SELECT last_insert_rowid() AS " + COLUMN_COURSE_ID;
+                Cursor cursor = db.rawQuery(query, null);
+                try {
+                    if (cursor.moveToFirst()) { // Move para a primeira posição, se possível
+                        int columnIndex = cursor.getColumnIndex(COLUMN_COURSE_ID);
+                        if (columnIndex >= 0) {
+                            courseId = cursor.getLong(columnIndex);
+                        } else {
+                            // Lidar com o caso em que a coluna não foi encontrada
+                            // Por exemplo, lançar uma exceção ou registrar um aviso
+                        }
+                    } else {
+                        // Lidar com o caso em que a consulta não retornou nenhum resultado
+                    }
+                } finally {
+                    cursor.close();
+                }
+            }
 
-        long insert = db.insert(COURSE_TABLE, null, cv);
-        if(insert == -1){
-            return false;
-        }else{
-            return true;
+            //Inserir na tabela SCHEDULES_TABLE
+            cv_schedule.put(COLUMN_SESSION, courseModel.getSession());
+            cv_schedule.put(COLUMN_WEEK_DAY, courseModel.getWeekDay());
+            cv_schedule.put(COLUMN_ID_COURSE, courseId);
+            long scheduleInsert = db.insert(SCHEDULES_TABLE, null, cv_schedule);
+
+            if(courseInsert != -1 && scheduleInsert != -1){
+                db.setTransactionSuccessful(); // Commit a transação se ambas as inserções foram bem-sucedidas
+                return true;
+            }else{
+                return false;
+            }
+        } finally {
+            db.endTransaction();
         }
 
     }
