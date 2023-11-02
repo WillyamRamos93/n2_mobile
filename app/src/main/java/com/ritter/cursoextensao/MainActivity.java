@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -38,12 +37,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                CourseModel courseModel = new CourseModel(-1, et_courseName.getText().toString(), sp_classSession.getSelectedItem().toString(), sp_weekDay.getSelectedItem().toString(), et_courseDesc.getText().toString() );
+                CourseModel courseModel;
+                try {
+                    courseModel = new CourseModel(-1, et_courseName.getText().toString(), sp_classSession.getSelectedItem().toString(), sp_weekDay.getSelectedItem().toString(), et_courseDesc.getText().toString() );
+                    Toast.makeText(MainActivity.this, courseModel.toString(), Toast.LENGTH_SHORT).show();
+                }catch (Exception e){
+                    Toast.makeText(MainActivity.this, "Error creating Course", Toast.LENGTH_SHORT).show();
+                    courseModel = new CourseModel(-1, "error", "error", "error", "error");
 
-                Toast.makeText(MainActivity.this, courseModel.toString(), Toast.LENGTH_SHORT).show();
+                }
+
+                DataBaseHelper dataBaseHelper = new DataBaseHelper(MainActivity.this);
+                boolean success = dataBaseHelper.addCourse(courseModel);
+                Toast.makeText(MainActivity.this, "SUCCESS" + success, Toast.LENGTH_SHORT).show();
+
+
             }
 
-            dbHelper DbHelper = new dbHelper(MainActivity.this);
+
         });
 
 
