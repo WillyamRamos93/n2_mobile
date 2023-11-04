@@ -123,4 +123,26 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
         return returnList;
     }
+
+    public boolean deleteCourse(int courseId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
+        try{
+            //Excluir da tabela SCHEDULES primeiro
+            db.delete(SCHEDULES_TABLE, COLUMN_ID_COURSE + " =?", new String[]{String.valueOf(courseId)});
+
+            //Em seguida, excluir da tb COURSE
+            int rowsAffected = db.delete(COURSE_TABLE, COLUMN_COURSE_ID + " =?", new String[]{String.valueOf(courseId)});
+
+            if (rowsAffected > 0){
+                db.setTransactionSuccessful();
+                return true;
+            } else {
+                return false;
+            }
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+    }
 }
