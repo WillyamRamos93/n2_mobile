@@ -1,22 +1,18 @@
 package com.ritter.cursoextensao;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity {
+public class AdminActivity extends AppCompatActivity {
 
     //references to buttons
 
@@ -29,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_admin);
 
         btn_save = findViewById(R.id.saveCourse);
         btn_list = findViewById(R.id.btn_list);
@@ -47,16 +43,16 @@ public class MainActivity extends AppCompatActivity {
                 CourseModel courseModel;
                 try {
                     courseModel = new CourseModel(-1, et_courseName.getText().toString(), sp_classSession.getSelectedItem().toString(), sp_weekDay.getSelectedItem().toString(), et_courseDesc.getText().toString() );
-                    Toast.makeText(MainActivity.this, courseModel.toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AdminActivity.this, courseModel.toString(), Toast.LENGTH_SHORT).show();
                 }catch (Exception e){
-                    Toast.makeText(MainActivity.this, "Error creating Course", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AdminActivity.this, "Error creating Course", Toast.LENGTH_SHORT).show();
                     courseModel = new CourseModel(-1, "error", "error", "error", "error");
 
                 }
 
-                DataBaseHelper dataBaseHelper = new DataBaseHelper(MainActivity.this);
+                DataBaseHelper dataBaseHelper = new DataBaseHelper(AdminActivity.this);
                 boolean success = dataBaseHelper.addCourse(courseModel);
-                Toast.makeText(MainActivity.this, "SUCCESS" + success, Toast.LENGTH_SHORT).show();
+                Toast.makeText(AdminActivity.this, "SUCCESS" + success, Toast.LENGTH_SHORT).show();
 
 
             }
@@ -68,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Criar um Intent para abrir a ActivityListCourse
-                Intent intent = new Intent(MainActivity.this, ListCourse.class);
+                Intent intent = new Intent(AdminActivity.this, ListCourse.class);
 
                 // Adicionar dados extras, se necessário
                 // intent.putExtra("chave", valor);

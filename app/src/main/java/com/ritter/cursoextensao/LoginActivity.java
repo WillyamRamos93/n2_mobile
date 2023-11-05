@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     }
     private void authenticate(String username, String password){
         if(checkAdminUser(username, password)) {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
             startActivity(intent);
             finish();
         }else {
