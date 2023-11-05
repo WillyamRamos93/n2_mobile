@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -21,9 +22,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_ID_COURSE = "id_course";
     public static final String COLUMN_SESSION = "session";
     public static final String COLUMN_WEEK_DAY = "weekDay";
+    public static final String USER_TABLE = "USER_TABLE";
+    public static final String USER_ID = "USER_ID";
+    public static final String USER_NAME = "USER_NAME";
+    public static final String PASSWORD = "PASSWORD";
+    public static final String IS_ADMIN = "IS_ADMIN";
 
     public DataBaseHelper(@Nullable Context context ) {
-        super(context, "course.db", null, 1);
+        super(context, "course.db", null, 2);
     }
 
     @Override
@@ -34,10 +40,33 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         String createTable_schedules = "CREATE TABLE " + SCHEDULES_TABLE + " ( " + COLUMN_SCHEDULES_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_ID_COURSE + " INTEGER, " + COLUMN_SESSION + " TEXT, " + COLUMN_WEEK_DAY + " TEXT, FOREIGN KEY ( " + COLUMN_ID_COURSE + " ) REFERENCES " + COURSE_TABLE + " ( " + COLUMN_COURSE_ID + " )) ";
         db.execSQL(createTable_schedules);
+
+        String createTable_user = "CREATE TABLE " +  USER_TABLE + "( " + USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + USER_NAME + " TEXT, " + PASSWORD + " TEXT, " + IS_ADMIN + " INTEGER )";
+        db.execSQL(createTable_user);
+        Log.d("DataBaseHelper", "Tabela USER_TABLE criada com sucesso");
+        //adiciona usuario admin se não existir
+        if (!isAdminUserExists(db)) {
+            ContentValues adminValues = new ContentValues();
+            adminValues.put(USER_NAME, "admin");
+            adminValues.put(PASSWORD, "admin");
+            adminValues.put(IS_ADMIN, 1);  // 1 representa true, 0 representa false
+            db.insert(USER_TABLE, null, adminValues);
+        }
+    }
+
+    private boolean isAdminUserExists(SQLiteDatabase db) {
+        String query = "SELECT * FROM " + USER_TABLE + " WHERE " + USER_NAME + " = 'admin' AND " + IS_ADMIN + " = 1";
+        Cursor cursor = db.rawQuery(query, null);
+
+        boolean userExists = cursor.getCount() > 0;
+
+        cursor.close();
+        return userExists;
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
 
     }
 
@@ -144,5 +173,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             db.endTransaction();
             db.close();
         }
+    }
+
+    public boolean checkAdminUser(String username, String password) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + USER_TABLE +
+                " WHERE " + USER_NAME + " = ? AND " +
+                PASSWORD + " = ? AND " +
+                IS_ADMIN + " = 1";
+
+        Cursor cursor = db.rawQuery(query, new String[]{username, password});
+        boolean isAdminUser = cursor.getCount() > 0;
+        cursor.close();
+        db.close();
+        return isAdminUser;
     }
 }
