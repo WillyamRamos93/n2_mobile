@@ -5,8 +5,8 @@
     <string name="save" translatable="false">Salvar</string>
     <string name="delete" translatable="false">Deletar</string>
     <string name="hello" translatable="false">Olá</string>
-    <string name="student_courses">Seus cursos</string>
-    <string name="student_no_courses">Não há cursos cadastrados</string>
+    <string name="student_courses" translatable="false">Seus cursos</string>
+    <string name="student_no_courses" translatable="false">Não há cursos cadastrados</string>
 
 
     <string-array name="weekDay">

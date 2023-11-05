@@ -28,18 +28,22 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
-    private void authenticate(String username, String password){
-        if(checkAdminUser(username, password)) {
+
+    private void authenticate(String username, String password) {
+        DataBaseHelper dbHelper = new DataBaseHelper(LoginActivity.this);
+        int userType = dbHelper.getUserType(username, password);
+
+        if (userType == 1) { // Se userType for 1, o usuário é um administrador
             Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
             startActivity(intent);
             finish();
-        }else {
+        } else if (userType == 0) { // Se userType for 0, o usuário é um estudante
+            Intent intent = new Intent(LoginActivity.this, StudentActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
             Toast.makeText(this, "Usuário ou senha incorreta", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private boolean checkAdminUser(String username, String password) {
-        DataBaseHelper dbHelper = new DataBaseHelper(LoginActivity.this);
-        return dbHelper.checkAdminUser(username, password);
-    }
 }

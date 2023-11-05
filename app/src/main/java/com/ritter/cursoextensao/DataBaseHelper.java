@@ -24,6 +24,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String USER_NAME = "USER_NAME";
     public static final String PASSWORD = "PASSWORD";
     public static final String IS_ADMIN = "IS_ADMIN";
+    public static final String STUDENT_CLASSES = "STUDENT_CLASSES";
+    public static final String CLASS_ID = "CLASS_ID";
+    public static final String REGISTRATION_COURSES = "REGISTRATION_COURSES";
+    public static final String REGISTRATION_ID = "REGISTRATION_ID";
 
     public DataBaseHelper(@Nullable Context context) {
         super(context, "course.db", null, 2);
@@ -35,9 +39,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String createTable_course = "CREATE TABLE " + COURSE_TABLE + " (" + COLUMN_COURSE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NM_COURSE + " TEXT, " + COLUMN_DESCRIPTION + " TEXT, " + COLUMN_SESSION + " TEXT, " + COLUMN_WEEK_DAY + " TEXT) ";
         db.execSQL(createTable_course);
 
+
+
         String createTable_user = "CREATE TABLE " + USER_TABLE + "( " + USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + USER_NAME + " TEXT, " + PASSWORD + " TEXT, " + IS_ADMIN + " INTEGER )";
         db.execSQL(createTable_user);
         Log.d("DataBaseHelper", "Tabela USER_TABLE criada com sucesso");
+
+        String createTable_studentClasses = "CREATE TABLE " + STUDENT_CLASSES + " (" + CLASS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + USER_ID + " TEXT, " + COLUMN_SESSION + " TEXT, " + COLUMN_WEEK_DAY + " TEXT )";
+        db.execSQL(createTable_studentClasses);
+
+        String createTable_registrationCourses = "CREATE TABLE " + REGISTRATION_COURSES + " (" + REGISTRATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + USER_ID + " TEXT, " + COLUMN_COURSE_ID + " TEXT )";
+        db.execSQL(createTable_registrationCourses);
+
         //adiciona usuario admin se não existir
         if (!isAdminUserExists(db)) {
             ContentValues adminValues = new ContentValues();
@@ -46,16 +59,67 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             adminValues.put(IS_ADMIN, 1);  // 1 representa true, 0 representa false
             db.insert(USER_TABLE, null, adminValues);
         }
+
+        for (int i = 1; i <= 5; i++) {
+            String studentName = "aluno" + i;
+            String password = "senha" + i;
+            int isAdmin = 0;  // Defina como 0 para não administradores
+
+            // Adiciona o estudante à USER_TABLE
+            addStudent(db, studentName, password, isAdmin);
+
+            // Associa o estudante a uma classe na STUDENT_CLASSES pelo menos 3 vezes na semana
+            for (int j = 0; j < 3; j++) {
+                // As strings abaixo são apenas exemplos, ajuste conforme necessário
+                String session = (j == 0) ? "manhã" : (j == 1) ? "tarde" : "noite";
+                String weekDay = getWeekDay(j);
+
+                // Associa o estudante à classe
+                associateStudentClass(db, i, session, weekDay);
+            }
+        }
+
+        // Fechar o banco de dados uma vez no final
+       // db.close();
     }
+
+
 
     private boolean isAdminUserExists(SQLiteDatabase db) {
         String query = "SELECT * FROM " + USER_TABLE + " WHERE " + USER_NAME + " = 'admin' AND " + IS_ADMIN + " = 1";
         Cursor cursor = db.rawQuery(query, null);
 
         boolean userExists = cursor.getCount() > 0;
-
         cursor.close();
         return userExists;
+    }
+
+    private boolean isStudentExists(SQLiteDatabase db, String userName) {
+        // Usar o banco de dados fornecido para evitar chamadas recursivas desnecessárias
+        String query = "SELECT * FROM " + USER_TABLE + " WHERE " + USER_NAME + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{userName});
+        boolean studentExists = cursor.getCount() > 0;
+        cursor.close();
+        return studentExists;
+    }
+
+
+    public int getUserType(String username, String password) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + IS_ADMIN + " FROM " + USER_TABLE +
+                " WHERE " + USER_NAME + " = ? AND " +
+                PASSWORD + " = ?";
+
+        Cursor cursor = db.rawQuery(query, new String[]{username, password});
+        int userType = -1; // Valor padrão para indicar que o usuário não foi encontrado
+
+        if (cursor.moveToFirst()) {
+            userType = cursor.getInt(0);
+        }
+
+        cursor.close();
+        db.close();
+        return userType;
     }
 
     @Override
@@ -113,7 +177,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
+       // db.close();
         return returnList;
     }
 
@@ -133,7 +197,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             }
         } finally {
             db.endTransaction();
-            db.close();
+           // db.close();
         }
     }
 
@@ -147,7 +211,50 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, new String[]{username, password});
         boolean isAdminUser = cursor.getCount() > 0;
         cursor.close();
-        db.close();
+      // db.close();
         return isAdminUser;
     }
+
+    public boolean addStudent(SQLiteDatabase db, String userName, String password, int isAdmin) {
+        // Verifica se o estudante já existe na base de dados
+        if (isStudentExists(db, userName)) {
+            return false; // Retorna false se o estudante já existir
+        }
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(USER_NAME, userName);
+        contentValues.put(PASSWORD, password);
+        contentValues.put(IS_ADMIN, isAdmin);
+
+        long result = db.insert(USER_TABLE, null, contentValues);
+
+        return result != -1; // Retorna true se a inserção foi bem-sucedida, false caso contrário
+    }
+
+
+
+
+
+    // Método para associar um estudante a uma classe na tabela STUDENT_CLASSES
+    public boolean associateStudentClass(SQLiteDatabase db, int userId, String session, String weekDay) {
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(USER_ID, userId);
+        contentValues.put(COLUMN_SESSION, session);
+        contentValues.put(COLUMN_WEEK_DAY, weekDay);
+
+        long result = db.insert(STUDENT_CLASSES, null, contentValues);
+
+        return result != -1; // Retorna true se a inserção foi bem-sucedida, false caso contrário
+    }
+
+
+
+    private String getWeekDay(int dayIndex) {
+        // Função auxiliar para obter o nome do dia da semana com base no índice
+        String[] weekDays = {"segunda", "terça", "quarta", "quinta", "sexta"};
+        return (dayIndex >= 0 && dayIndex < weekDays.length) ? weekDays[dayIndex] : "";
+    }
+
+
 }
