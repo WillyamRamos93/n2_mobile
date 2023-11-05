@@ -17,9 +17,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_NM_COURSE = "nm_course";
     public static final String COLUMN_DESCRIPTION = "description";
     public static final String COLUMN_COURSE_ID = "course_id";
-    public static final String SCHEDULES_TABLE = "SCHEDULES_TABLE";
-    public static final String COLUMN_SCHEDULES_ID = "schedules_id";
-    public static final String COLUMN_ID_COURSE = "id_course";
     public static final String COLUMN_SESSION = "session";
     public static final String COLUMN_WEEK_DAY = "weekDay";
     public static final String USER_TABLE = "USER_TABLE";
@@ -28,20 +25,17 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String PASSWORD = "PASSWORD";
     public static final String IS_ADMIN = "IS_ADMIN";
 
-    public DataBaseHelper(@Nullable Context context ) {
+    public DataBaseHelper(@Nullable Context context) {
         super(context, "course.db", null, 2);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        String createTable_course = "CREATE TABLE " + COURSE_TABLE + " (" + COLUMN_COURSE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NM_COURSE + " TEXT, " + COLUMN_DESCRIPTION + " TEXT) ";
+        String createTable_course = "CREATE TABLE " + COURSE_TABLE + " (" + COLUMN_COURSE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NM_COURSE + " TEXT, " + COLUMN_DESCRIPTION + " TEXT, " + COLUMN_SESSION + " TEXT, " + COLUMN_WEEK_DAY + " TEXT) ";
         db.execSQL(createTable_course);
 
-        String createTable_schedules = "CREATE TABLE " + SCHEDULES_TABLE + " ( " + COLUMN_SCHEDULES_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_ID_COURSE + " INTEGER, " + COLUMN_SESSION + " TEXT, " + COLUMN_WEEK_DAY + " TEXT, FOREIGN KEY ( " + COLUMN_ID_COURSE + " ) REFERENCES " + COURSE_TABLE + " ( " + COLUMN_COURSE_ID + " )) ";
-        db.execSQL(createTable_schedules);
-
-        String createTable_user = "CREATE TABLE " +  USER_TABLE + "( " + USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + USER_NAME + " TEXT, " + PASSWORD + " TEXT, " + IS_ADMIN + " INTEGER )";
+        String createTable_user = "CREATE TABLE " + USER_TABLE + "( " + USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + USER_NAME + " TEXT, " + PASSWORD + " TEXT, " + IS_ADMIN + " INTEGER )";
         db.execSQL(createTable_user);
         Log.d("DataBaseHelper", "Tabela USER_TABLE criada com sucesso");
         //adiciona usuario admin se não existir
@@ -66,68 +60,38 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-
     }
 
-    public boolean addCourse (CourseModel courseModel) {
+    public boolean addCourse(CourseModel courseModel) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv_course = new ContentValues();
-        ContentValues cv_schedule = new ContentValues();
         db.beginTransaction();
 
-        try{
-            //Inserir na tabela COURSE_TABLE
+        try {
+            // Inserir na tabela COURSE_TABLE
             cv_course.put(COLUMN_NM_COURSE, courseModel.getName());
             cv_course.put(COLUMN_DESCRIPTION, courseModel.getDescription());
+            cv_course.put(COLUMN_SESSION, courseModel.getSession());
+            cv_course.put(COLUMN_WEEK_DAY, courseModel.getWeekDay());
             long courseInsert = db.insert(COURSE_TABLE, null, cv_course);
 
-            // Recuperar o ID recém-inserido na tabela COURSE_TABLE
-            long courseId = -1;
             if (courseInsert != -1) {
-                String query = "SELECT last_insert_rowid() AS " + COLUMN_COURSE_ID;
-                Cursor cursor = db.rawQuery(query, null);
-                try {
-                    if (cursor.moveToFirst()) { // Move para a primeira posição, se possível
-                        int columnIndex = cursor.getColumnIndex(COLUMN_COURSE_ID);
-                        if (columnIndex >= 0) {
-                            courseId = cursor.getLong(columnIndex);
-                        } else {
-                            // Lidar com o caso em que a coluna não foi encontrada
-                            // Por exemplo, lançar uma exceção ou registrar um aviso
-                        }
-                    } else {
-                        // Lidar com o caso em que a consulta não retornou nenhum resultado
-                    }
-                } finally {
-                    cursor.close();
-                }
-            }
-
-            //Inserir na tabela SCHEDULES_TABLE
-            cv_schedule.put(COLUMN_SESSION, courseModel.getSession());
-            cv_schedule.put(COLUMN_WEEK_DAY, courseModel.getWeekDay());
-            cv_schedule.put(COLUMN_ID_COURSE, courseId);
-            long scheduleInsert = db.insert(SCHEDULES_TABLE, null, cv_schedule);
-
-            if(courseInsert != -1 && scheduleInsert != -1){
-                db.setTransactionSuccessful(); // Commit a transação se ambas as inserções foram bem-sucedidas
+                db.setTransactionSuccessful(); // Commit a transação se a inserção foi bem-sucedida
                 return true;
-            }else{
+            } else {
                 return false;
             }
         } finally {
             db.endTransaction();
         }
-
     }
+
 
     public List<CourseModel> getAllCourses(){
         List<CourseModel> returnList = new ArrayList<>();
         String queryCourse = "SELECT "  + COLUMN_COURSE_ID + ", " + COLUMN_NM_COURSE + ", " + COLUMN_SESSION + ", " + COLUMN_WEEK_DAY + ", " + COLUMN_DESCRIPTION +
-                             " FROM "   + COURSE_TABLE + " C " +
-                             " JOIN "   + SCHEDULES_TABLE + " S " +
-                             " ON C."   + COLUMN_COURSE_ID + " = " + " S." + COLUMN_ID_COURSE;
+                             " FROM "   + COURSE_TABLE ;
+
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(queryCourse, null);
@@ -157,8 +121,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
         try{
-            //Excluir da tabela SCHEDULES primeiro
-            db.delete(SCHEDULES_TABLE, COLUMN_ID_COURSE + " =?", new String[]{String.valueOf(courseId)});
 
             //Em seguida, excluir da tb COURSE
             int rowsAffected = db.delete(COURSE_TABLE, COLUMN_COURSE_ID + " =?", new String[]{String.valueOf(courseId)});
