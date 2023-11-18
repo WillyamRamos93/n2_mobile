@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class Adapter extends RecyclerView.Adapter<Adapter.CourseViewHolder> {
+public class admin_Adapter extends RecyclerView.Adapter<admin_Adapter.CourseViewHolder> {
 
     Button btnDelete;
 
@@ -21,7 +21,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.CourseViewHolder> {
     private List<CourseModel> courseList;
     private DataBaseHelper dbHelper;
 
-    public Adapter(Context context, List<CourseModel> courseList) {
+    public admin_Adapter(Context context, List<CourseModel> courseList) {
         this.context = context;
         this.courseList = courseList;
         this.dbHelper = new DataBaseHelper(context);
@@ -30,7 +30,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.CourseViewHolder> {
     @Override
     public CourseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.courses_item, parent, false);
-        btnDelete = view.findViewById(R.id.btn_delete);
+        btnDelete = view.findViewById(R.id.btn_register);
         return new CourseViewHolder(view, btnDelete);
 
     }

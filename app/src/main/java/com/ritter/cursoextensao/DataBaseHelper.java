@@ -1,5 +1,6 @@
 package com.ritter.cursoextensao;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -52,7 +53,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL(createTable_registrationCourses);
 
         //adiciona usuario admin se não existir
-        if (!isAdminUserExists(db)) {
+        if (!AdminUserExists(db)) {
             ContentValues adminValues = new ContentValues();
             adminValues.put(USER_NAME, "admin");
             adminValues.put(PASSWORD, "admin");
@@ -85,7 +86,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
 
-    private boolean isAdminUserExists(SQLiteDatabase db) {
+
+    private boolean AdminUserExists(SQLiteDatabase db) {
         String query = "SELECT * FROM " + USER_TABLE + " WHERE " + USER_NAME + " = 'admin' AND " + IS_ADMIN + " = 1";
         Cursor cursor = db.rawQuery(query, null);
 
@@ -94,7 +96,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return userExists;
     }
 
-    private boolean isStudentExists(SQLiteDatabase db, String userName) {
+
+    private boolean StudentExists(SQLiteDatabase db, String userName) {
         // Usar o banco de dados fornecido para evitar chamadas recursivas desnecessárias
         String query = "SELECT * FROM " + USER_TABLE + " WHERE " + USER_NAME + " = ?";
         Cursor cursor = db.rawQuery(query, new String[]{userName});
@@ -217,7 +220,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public boolean addStudent(SQLiteDatabase db, String userName, String password, int isAdmin) {
         // Verifica se o estudante já existe na base de dados
-        if (isStudentExists(db, userName)) {
+        if (StudentExists(db, userName)) {
             return false; // Retorna false se o estudante já existir
         }
 
@@ -255,6 +258,115 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String[] weekDays = {"segunda", "terça", "quarta", "quinta", "sexta"};
         return (dayIndex >= 0 && dayIndex < weekDays.length) ? weekDays[dayIndex] : "";
     }
+
+    public boolean registerUserToCourse(int userId, int courseId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(USER_ID, userId);
+        contentValues.put(COLUMN_COURSE_ID, courseId);
+
+        long result = db.insert(REGISTRATION_COURSES, null, contentValues);
+
+        return result != -1; // Retorna true se a inserção foi bem-sucedida, false caso contrário
+    }
+
+    public boolean unregisterUserFromCourse(int userId, int courseId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
+
+        try {
+            // Exclui o registro da tabela REGISTRATION_COURSES
+            int rowsAffected = db.delete(REGISTRATION_COURSES,
+                    USER_ID + " = ? AND " + COLUMN_COURSE_ID + " = ?",
+                    new String[]{String.valueOf(userId), String.valueOf(courseId)});
+
+            if (rowsAffected > 0) {
+                db.setTransactionSuccessful();
+                return true;
+            } else {
+                return false;
+            }
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public List<CourseModel> getUserCourses(int userId) {
+        List<CourseModel> userCourses = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT " + COURSE_TABLE + "." + COLUMN_COURSE_ID + ", " +
+                COURSE_TABLE + "." + COLUMN_NM_COURSE + ", " +
+                COURSE_TABLE + "." + COLUMN_SESSION + ", " +
+                COURSE_TABLE + "." + COLUMN_WEEK_DAY + ", " +
+                COURSE_TABLE + "." + COLUMN_DESCRIPTION +
+                " FROM " + COURSE_TABLE +
+                " JOIN " + REGISTRATION_COURSES +
+                " ON " + COURSE_TABLE + "." + COLUMN_COURSE_ID + " = " + REGISTRATION_COURSES + "." + COLUMN_COURSE_ID +
+                " WHERE " + REGISTRATION_COURSES + "." + USER_ID + " = ?";
+
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
+
+        if (cursor.moveToFirst()) {
+            do {
+                int courseId = cursor.getInt(0);
+                String courseName = cursor.getString(1);
+                String courseSession = cursor.getString(2);
+                String courseDay = cursor.getString(3);
+                String courseDesc = cursor.getString(4);
+
+                CourseModel userCourse = new CourseModel(courseId, courseName, courseSession, courseDay, courseDesc);
+                userCourses.add(userCourse);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return userCourses;
+    }
+
+    public List<CourseModel> getUserAvailableCourses(int userId) {
+        List<CourseModel> availableCourses = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+
+        String query = "SELECT " +
+                "ct." + COLUMN_COURSE_ID + ", " +
+                "ct." + COLUMN_NM_COURSE + ", " +
+                "ct." + COLUMN_SESSION + ", " +
+                "ct." + COLUMN_WEEK_DAY + ", " +
+                "ct." + COLUMN_DESCRIPTION +
+                " FROM " + COURSE_TABLE + " ct " +
+                "WHERE ct." + COLUMN_COURSE_ID + " NOT IN (" +
+                "SELECT rc." + COLUMN_COURSE_ID +
+                " FROM " + REGISTRATION_COURSES +
+                " rc WHERE rc." + USER_ID + " = ?" +
+                ") AND NOT EXISTS (" +
+                "SELECT 1" +
+                " FROM " + STUDENT_CLASSES +
+                " sc WHERE sc." + USER_ID + " = ?" +
+                " AND UPPER(ct." + COLUMN_SESSION + ") = UPPER(sc." + COLUMN_SESSION + ")" +
+                " AND UPPER(ct." + COLUMN_WEEK_DAY + ") = UPPER(sc." + COLUMN_WEEK_DAY + ")" +
+                ")";
+
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId), String.valueOf(userId)});
+
+        if (cursor.moveToFirst()) {
+            do {
+                @SuppressLint("Range") int courseId = cursor.getInt(cursor.getColumnIndex(COLUMN_COURSE_ID));
+                @SuppressLint("Range") String courseName = cursor.getString(cursor.getColumnIndex(COLUMN_NM_COURSE));
+                @SuppressLint("Range") String session = cursor.getString(cursor.getColumnIndex(COLUMN_SESSION));
+                @SuppressLint("Range") String weekDay = cursor.getString(cursor.getColumnIndex(COLUMN_WEEK_DAY));
+                @SuppressLint("Range") String description = cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION));
+
+                CourseModel course = new CourseModel(courseId, courseName, session, weekDay, description);
+                availableCourses.add(course);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return availableCourses;
+    }
+
 
 
 }

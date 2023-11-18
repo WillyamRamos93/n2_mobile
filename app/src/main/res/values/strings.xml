@@ -7,6 +7,7 @@
     <string name="hello" translatable="false">Olá</string>
     <string name="student_courses" translatable="false">Seus cursos</string>
     <string name="student_no_courses" translatable="false">Não há cursos cadastrados</string>
+    <string name="student_register_course" translatable="false">Inscrever-se</string>
 
 
     <string-array name="weekDay">
