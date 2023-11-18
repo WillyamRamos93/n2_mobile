@@ -29,21 +29,28 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void authenticate(String username, String password) {
+    public void authenticate(String username, String password) {
         DataBaseHelper dbHelper = new DataBaseHelper(LoginActivity.this);
-        int userType = dbHelper.getUserType(username, password);
+        UserModel user = dbHelper.getUser(username, password);
 
-        if (userType == 1) { // Se userType for 1, o usuário é um administrador
-            Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
-            startActivity(intent);
-            finish();
-        } else if (userType == 0) { // Se userType for 0, o usuário é um estudante
-            Intent intent = new Intent(LoginActivity.this, StudentActivity.class);
-            startActivity(intent);
-            finish();
+        if (user != null) {
+            // Armazene as informações do usuário autenticado na UserModel
+            UserInfo.setUserModel(user);
+
+            if (user.isAdmin()) {
+                Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                Intent intent = new Intent(LoginActivity.this, StudentActivity.class);
+                startActivity(intent);
+                finish();
+            }
         } else {
             Toast.makeText(this, "Usuário ou senha incorreta", Toast.LENGTH_SHORT).show();
         }
     }
+
+
 
 }

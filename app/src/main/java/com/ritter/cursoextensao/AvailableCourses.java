@@ -20,9 +20,10 @@ public class AvailableCourses extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         DataBaseHelper dbHelper = new DataBaseHelper(this);
+        UserModel user = UserInfo.getUserModel();
 
 
-        int userId = 1; // Substitua pelo ID real do usuário, ou obtenha-o de alguma forma
+        int userId = user.getId();
         List<CourseModel> availableCourses = dbHelper.getUserAvailableCourses(userId);
 
         AvailableCoursesAdapter adapter = new AvailableCoursesAdapter(this, availableCourses, new AvailableCoursesAdapter.OnItemClickListener() {

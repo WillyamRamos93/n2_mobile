@@ -84,7 +84,34 @@ public class DataBaseHelper extends SQLiteOpenHelper {
        // db.close();
     }
 
+    public UserModel getUser(String username, String password) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        UserModel user = null;
 
+        // Consulta para obter o usuário com base no username e password
+        Cursor cursor = db.query(
+                USER_TABLE, // Nome da tabela
+                new String[]{USER_ID, USER_NAME, PASSWORD, IS_ADMIN}, // Colunas que você deseja recuperar
+                USER_NAME + " = ? AND " + PASSWORD + " = ?", // Cláusula WHERE
+                new String[]{username, password}, // Argumentos da cláusula WHERE
+                null,
+                null,
+                null
+        );
+
+        // Verifica se a consulta retornou algum resultado
+        if (cursor != null && cursor.moveToFirst()) {
+            // Extrai as informações do cursor e cria um objeto UserModel
+            int userId = cursor.getInt(cursor.getColumnIndex(USER_ID));
+            boolean isAdmin = cursor.getInt(cursor.getColumnIndex(IS_ADMIN)) == 1; // 1 se for admin, 0 se não for
+            user = new UserModel(userId, username, password, isAdmin);
+            cursor.close();
+        }
+
+        db.close();
+
+        return user;
+    }
 
 
     private boolean AdminUserExists(SQLiteDatabase db) {
