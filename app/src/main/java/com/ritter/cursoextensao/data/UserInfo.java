@@ -1,4 +1,4 @@
-package com.ritter.cursoextensao;
+package com.ritter.cursoextensao.data;
 
 public class UserInfo {
     private static String username;

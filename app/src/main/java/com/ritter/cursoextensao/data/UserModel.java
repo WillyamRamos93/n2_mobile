@@ -1,4 +1,4 @@
-package com.ritter.cursoextensao;
+package com.ritter.cursoextensao.data;
 
 public class UserModel {
     private int id;

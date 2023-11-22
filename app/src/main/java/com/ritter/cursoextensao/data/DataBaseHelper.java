@@ -1,4 +1,4 @@
-package com.ritter.cursoextensao;
+package com.ritter.cursoextensao.data;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -9,6 +9,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+
+import com.ritter.cursoextensao.data.CourseModel;
+import com.ritter.cursoextensao.data.UserModel;
 
 import java.util.ArrayList;
 import java.util.List;

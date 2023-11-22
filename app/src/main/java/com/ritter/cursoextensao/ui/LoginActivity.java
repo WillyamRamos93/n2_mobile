@@ -1,4 +1,4 @@
-package com.ritter.cursoextensao;
+package com.ritter.cursoextensao.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.ritter.cursoextensao.R;
+import com.ritter.cursoextensao.data.DataBaseHelper;
+import com.ritter.cursoextensao.data.UserInfo;
+import com.ritter.cursoextensao.data.UserModel;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -25,8 +30,6 @@ public class LoginActivity extends AppCompatActivity {
                 authenticate(userName.getText().toString(), userPass.getText().toString());
             }
         });
-
-
     }
 
     public void authenticate(String username, String password) {
@@ -37,20 +40,16 @@ public class LoginActivity extends AppCompatActivity {
             // Armazene as informações do usuário autenticado na UserModel
             UserInfo.setUserModel(user);
 
-            if (user.isAdmin()) {
-                Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
-                startActivity(intent);
-                finish();
-            } else {
-                Intent intent = new Intent(LoginActivity.this, StudentActivity.class);
-                startActivity(intent);
-                finish();
-            }
+            // Obter o tipo de usuário (ADMIN ou ALUNO)
+            boolean ehAdmin = user.isAdmin();
+
+            // Redirecionar para HomeActivity com o tipo de usuário
+            Intent intent = new Intent(this, HomeActivity.class);
+            intent.putExtra("EH-ADMIN", ehAdmin);
+            startActivity(intent);
+            finish();
         } else {
             Toast.makeText(this, "Usuário ou senha incorreta", Toast.LENGTH_SHORT).show();
         }
     }
-
-
-
 }

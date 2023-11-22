@@ -7,6 +7,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.ritter.cursoextensao.data.CourseModel;
+import com.ritter.cursoextensao.data.DataBaseHelper;
+import com.ritter.cursoextensao.data.UserInfo;
+import com.ritter.cursoextensao.data.UserModel;
+
 import java.util.List;
 
 public class AvailableCourses extends AppCompatActivity {

@@ -12,6 +12,9 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.ritter.cursoextensao.data.CourseModel;
+import com.ritter.cursoextensao.data.DataBaseHelper;
+
 public class AdminActivity extends AppCompatActivity {
 
     //references to buttons

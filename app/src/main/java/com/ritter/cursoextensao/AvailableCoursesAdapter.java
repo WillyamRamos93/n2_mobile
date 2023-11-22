@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ritter.cursoextensao.data.CourseModel;
+
 import java.util.List;
 public class AvailableCoursesAdapter extends RecyclerView.Adapter<AvailableCoursesAdapter.CourseViewHolder> {
 

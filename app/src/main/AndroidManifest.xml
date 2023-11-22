@@ -13,13 +13,18 @@
         android:theme="@style/Theme.CursoExtensao"
         tools:targetApi="31">
         <activity
+            android:name=".ui.HomeActivity"
+            android:exported="false"
+            android:label="@string/title_activity_home"
+            android:theme="@style/Theme.CursoExtensao.NoActionBar" />
+        <activity
             android:name=".AvailableCourses"
             android:exported="false" />
         <activity
             android:name=".StudentActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".ui.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

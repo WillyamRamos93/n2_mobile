@@ -6,6 +6,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 
+import com.ritter.cursoextensao.data.CourseModel;
+import com.ritter.cursoextensao.data.DataBaseHelper;
+
 import java.util.List;
 
 public class ListCourse extends AppCompatActivity {
