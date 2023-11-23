@@ -33,9 +33,7 @@
         <item>Noite</item>
     </string-array>
 
-    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="cabecalho" translatable="false">Cabecalho</string>
     <string name="title_activity_home" translatable="false">HomeActivity</string>
-    <string name="menu_gallery" translatable="false">Gallery</string>
-    <string name="menu_slideshow" translatable="false">Slideshow</string>
 
 </resources>

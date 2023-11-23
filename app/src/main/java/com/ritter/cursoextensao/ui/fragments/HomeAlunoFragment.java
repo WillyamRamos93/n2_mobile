@@ -10,7 +10,8 @@ import android.view.ViewGroup;
 
 import com.ritter.cursoextensao.R;
 
-public class AdminFragment extends Fragment {
+public class HomeAlunoFragment extends Fragment {
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,7 +19,7 @@ public class AdminFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_admin, container, false);
+        View view = inflater.inflate(R.layout.fragment_home_aluno, container, false);
         // Inicialize elementos de UI e lógica específica para o ALUNO aqui
         return view;
     }
