@@ -1,9 +1,11 @@
 package com.ritter.cursoextensao.ui;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
+import com.google.android.material.navigation.NavigationView;
 
 import com.ritter.cursoextensao.R;
 import com.ritter.cursoextensao.ui.fragments.HomeAdminFragment;
@@ -14,6 +16,17 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        // Seta as informaçoes do menu lateral
+        NavigationView navigationView = findViewById(R.id.home_nav_view);
+
+        View headerView = navigationView.getHeaderView(0);
+
+        TextView nomeTextView = headerView.findViewById(R.id.nomeNavView);
+        //TextView emailTextView = headerView.findViewById(R.id.emailNavView);
+
+        nomeTextView.setText(getIntent().getStringExtra("USERNAME"));
+        //emailTextView.setText("Idade do Aluno");
 
         // Obter o tipo de usuário do intent
         boolean ehAdmin = getIntent().getBooleanExtra("EH-ADMIN", true);
@@ -31,24 +44,10 @@ public class HomeActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.home_container, new HomeAdminFragment())
                 .commit();
-
-        // Adiciona o Fragment do menu lateral para ADMIN
-        //getSupportFragmentManager().beginTransaction()
-        //        .replace(R.id.menu_container, new MenuAdminFragment())
-        //        .commit();
-
-        //getSupportActionBar().setTitle("Admin");
     }
     private void showAlunoUI() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.home_container, new HomeAlunoFragment())
                 .commit();
-
-        // Adiciona o Fragment do menu lateral para ALUNO
-        //getSupportFragmentManager().beginTransaction()
-        //       .replace(R.id.menu_container, new MenuAlunoFragment())
-        //        .commit();
-
-        //getSupportActionBar().setTitle("Aluno");
     }
 }

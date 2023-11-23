@@ -42,10 +42,12 @@ public class LoginActivity extends AppCompatActivity {
 
             // Obter o tipo de usuário (ADMIN ou ALUNO)
             boolean ehAdmin = user.isAdmin();
+            String userName = user.getUser();
 
             // Redirecionar para HomeActivity com o tipo de usuário
             Intent intent = new Intent(this, HomeActivity.class);
             intent.putExtra("EH-ADMIN", ehAdmin);
+            intent.putExtra("USERNAME", userName);
             startActivity(intent);
             finish();
         } else {
