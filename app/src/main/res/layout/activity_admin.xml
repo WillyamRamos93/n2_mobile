@@ -9,16 +9,16 @@
 
     <EditText
         android:id="@+id/nmCourse"
-        android:layout_width="350dp"
-        android:layout_height="43dp"
-        android:layout_marginTop="232dp"
+        android:layout_width="335dp"
+        android:layout_height="46dp"
+        android:layout_marginBottom="84dp"
         android:ems="10"
         android:hint="@string/courseName"
         android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@+id/classSession"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.434"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Spinner
         android:id="@+id/classSession"
@@ -35,32 +35,34 @@
         android:layout_width="121dp"
         android:layout_height="43dp"
         android:layout_marginEnd="28dp"
+        android:layout_marginBottom="40dp"
         android:entries="@array/weekDay"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:layout_editor_absoluteY="344dp" />
+        app:layout_constraintBottom_toTopOf="@+id/descClass"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <EditText
         android:id="@+id/descClass"
         android:layout_width="350dp"
         android:layout_height="167dp"
+        android:layout_marginBottom="40dp"
         android:ems="10"
         android:hint="@string/descr"
         android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@+id/saveCourse"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.491"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="417dp" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/saveCourse"
         android:layout_width="222dp"
         android:layout_height="41dp"
-        android:layout_marginTop="72dp"
+        android:layout_marginBottom="52dp"
         android:text="Salvar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descClass" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView4"
@@ -72,7 +74,7 @@
         app:layout_constraintHorizontal_bias="0.428"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.543" />
+        app:layout_constraintVertical_bias="0.438" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

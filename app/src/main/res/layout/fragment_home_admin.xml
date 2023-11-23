@@ -102,8 +102,8 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/button"
-            android:layout_width="351dp"
+            android:id="@+id/btn_save_curso"
+            android:layout_width="346dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:background="@drawable/btn_rounded_corners"
@@ -111,7 +111,7 @@
             android:text="CADASTRAR CURSOS" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/btn_list_curso"
             android:layout_width="351dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -120,6 +120,7 @@
             android:text="CURSOS CADASTRADOS" />
 
         <Button
+            android:id="@+id/btn_alunos"
             android:layout_width="351dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"

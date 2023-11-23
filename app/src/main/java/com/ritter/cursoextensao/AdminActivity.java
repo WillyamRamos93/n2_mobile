@@ -19,7 +19,7 @@ public class AdminActivity extends AppCompatActivity {
 
     //references to buttons
 
-    Button btn_list;
+    //Button btn_list;
     Button btn_save;
     EditText et_courseName, et_courseDesc;
     Spinner sp_weekDay, sp_classSession;
@@ -31,7 +31,7 @@ public class AdminActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin);
 
         btn_save = findViewById(R.id.saveCourse);
-        btn_list = findViewById(R.id.btn_list);
+       // btn_list = findViewById(R.id.btn_list);
         et_courseName = findViewById(R.id.nmCourse);
         et_courseDesc = findViewById(R.id.descClass);
         sp_weekDay = findViewById(R.id.classDay);
@@ -63,19 +63,19 @@ public class AdminActivity extends AppCompatActivity {
 
         });
 
-        btn_list.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        //btn_list.setOnClickListener(new View.OnClickListener() {
+           // @Override
+          //  public void onClick(View v) {
                 // Criar um Intent para abrir a ActivityListCourse
-                Intent intent = new Intent(AdminActivity.this, ListCourse.class);
+          //      Intent intent = new Intent(AdminActivity.this, ListCourse.class);
 
                 // Adicionar dados extras, se necessário
                 // intent.putExtra("chave", valor);
 
                 // Iniciar a nova Activity
-                startActivity(intent);
-            }
-        });
+        //        startActivity(intent);
+      //      }
+     //   });
 
 
 
