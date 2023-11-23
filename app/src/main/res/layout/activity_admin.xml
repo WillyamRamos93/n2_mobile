@@ -11,71 +11,68 @@
         android:id="@+id/nmCourse"
         android:layout_width="350dp"
         android:layout_height="43dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="232dp"
         android:ems="10"
         android:hint="@string/courseName"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
         android:id="@+id/classSession"
-        android:layout_width="344dp"
-        android:layout_height="34dp"
-        android:layout_marginTop="24dp"
+        android:layout_width="119dp"
+        android:layout_height="41dp"
         android:entries="@array/classSession"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.447"
+        app:layout_constraintEnd_toStartOf="@+id/classDay"
+        app:layout_constraintHorizontal_bias="0.229"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nmCourse" />
+        app:layout_constraintTop_toTopOf="@+id/classDay" />
 
     <Spinner
         android:id="@+id/classDay"
-        android:layout_width="344dp"
-        android:layout_height="34dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="121dp"
+        android:layout_height="43dp"
+        android:layout_marginEnd="28dp"
         android:entries="@array/weekDay"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.447"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/classSession" />
+        tools:layout_editor_absoluteY="344dp" />
 
     <EditText
         android:id="@+id/descClass"
         android:layout_width="350dp"
         android:layout_height="167dp"
-        android:layout_marginTop="44dp"
         android:ems="10"
         android:hint="@string/descr"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/classDay" />
+        tools:layout_editor_absoluteY="417dp" />
 
     <Button
         android:id="@+id/saveCourse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="36dp"
+        android:layout_width="222dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="72dp"
         android:text="Salvar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descClass" />
-
-    <Button
-        android:id="@+id/btn_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="40dp"
-        android:text="Listar"
-        app:layout_constraintEnd_toStartOf="@+id/saveCourse"
-        app:layout_constraintHorizontal_bias="0.151"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descClass" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="341dp"
+        android:layout_height="61dp"
+        android:text="text_cadastrar_curso"
+        app:layout_constraintBottom_toTopOf="@+id/nmCourse"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.428"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.543" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
