@@ -41,7 +41,6 @@ public class RegisteredCoursesAdapter extends RecyclerView.Adapter<RegisteredCou
 
     @Override
     public void onBindViewHolder(@NonNull CourseViewHolder holder, int position) {
-
         CourseModel course = coursesList.get(position);
 
         holder.courseNameTextView.setText(course.getName());
@@ -49,15 +48,17 @@ public class RegisteredCoursesAdapter extends RecyclerView.Adapter<RegisteredCou
         holder.courseDayTextView.setText(course.getWeekDay());
         holder.courseDescTextView.setText(course.getDescription());
 
-        // Defina o clique no botão
-        holder.registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener != null) {
-                    listener.onRegisterButtonClick(position);
+        // Verifique se o botão não é nulo antes de configurar o clique
+        if (holder.registerButton != null) {
+            holder.registerButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onRegisterButtonClick(position);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
 
