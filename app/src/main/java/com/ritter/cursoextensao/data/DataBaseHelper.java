@@ -397,6 +397,34 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return availableCourses;
     }
 
+    public int countAllCourses() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT COUNT(*) FROM " + COURSE_TABLE;
+        Cursor cursor = db.rawQuery(query, null);
+        int count = 0;
 
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+
+        cursor.close();
+        db.close();
+        return count;
+    }
+
+    public int countAllStudents() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT COUNT(DISTINCT " + USER_ID + ") FROM " + REGISTRATION_COURSES;
+        Cursor cursor = db.rawQuery(query, null);
+        int count = 0;
+
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+
+        cursor.close();
+        db.close();
+        return count;
+    }
 
 }
