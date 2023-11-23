@@ -6,7 +6,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@drawable/borda"
+    android:backgroundTint="#9CECE4">
 
 
     <TextView
@@ -46,8 +48,8 @@
 
     <TextView
         android:id="@+id/textViewCourseDesc"
-        android:layout_width="366dp"
-        android:layout_height="87dp"
+        android:layout_width="357dp"
+        android:layout_height="38dp"
         android:layout_below="@id/textViewCourseSession"
         android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
